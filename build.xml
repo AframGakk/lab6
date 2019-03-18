@@ -59,6 +59,7 @@ if you need -Xlint=unchecked (in target build) or -Xmx500m (in target run), unco
 			<compilerarg value="-Xlint:unchecked"/>
 			-->
 		</javac>
+
 		<jar jarfile="${finaljarfile}" >
 			<fileset dir="${build}"/>
 			<manifest>

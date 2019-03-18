@@ -2,10 +2,13 @@ import aima.core.learning.learners.DecisionTreeLearner;
 import aima.core.learning.framework.DataSetFactory;
 import aima.core.learning.framework.DataSetSpecification;
 import aima.core.learning.framework.DataSet;
+import org.jfree.ui.RefineryUtilities;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -73,6 +76,7 @@ public class Main {
 		DataSet testData = loadCompleteDataSet(dataSetName + ".test", dss);
 
 
+		List<Result> results = new ArrayList<>();
 		int totalSize = testData.size();
 
 		for (int i = 1; i < totalSize; i++) {
@@ -88,9 +92,16 @@ public class Main {
 			int[] testResult = dtl.test(testData);
 			int nbCorrect = testResult[0];
 			int nbIncorrect = testResult[1];
+
+			results.add(new Result(i, (nbCorrect * 100.0 / (nbCorrect + nbIncorrect))));
 			System.out.println("test result: " + nbCorrect + " of " + (nbCorrect + nbIncorrect) + " examples classified correctly (" + (nbCorrect * 100.0 / (nbCorrect + nbIncorrect)) + "%)");
 
 		}
+
+		final ChartSeries chart = new ChartSeries(dataSetName, results);
+		chart.pack();
+		RefineryUtilities.centerFrameOnScreen(chart);
+		chart.setVisible(true);
 
 	}
 
