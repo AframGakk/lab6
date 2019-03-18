@@ -56,6 +56,45 @@ public class Main {
 	 * main procedure
 	 */
 	public static void main(String[] args) throws Exception {
+		testIncreasing();
+	}
+
+	private static void testIncreasing() throws Exception {
+		// setup the DataSetSpecification
+		DataSetSpecification dss = getSpecification();
+
+		/* load training and test data sets
+		   There are three data sets describing different concepts:
+		     monks-1 (124 training examples), monks-2 (169 training examples), monks-3 (122 training examples).
+		   Look at the end of monks.names, to see which concepts the data sets describe.
+		*/
+		String dataSetName = "monks-1"; // other sets are "monks-2" and "monks-3"
+		DataSet trainingData = loadCompleteDataSet(dataSetName + ".train", dss);
+		DataSet testData = loadCompleteDataSet(dataSetName + ".test", dss);
+
+
+		int totalSize = testData.size();
+
+		for (int i = 1; i < totalSize; i++) {
+			trainingData = loadDataSet(dataSetName + ".train", dss, i);
+
+			DecisionTreeLearner dtl = new DecisionTreeLearner();
+
+			// learn the decision tree using the training data
+			System.out.println("Learning decision tree for " + dataSetName + " from " + trainingData.size() + " examples ...");
+			dtl.train(trainingData);
+
+			// test the decision tree using the test data
+			int[] testResult = dtl.test(testData);
+			int nbCorrect = testResult[0];
+			int nbIncorrect = testResult[1];
+			System.out.println("test result: " + nbCorrect + " of " + (nbCorrect + nbIncorrect) + " examples classified correctly (" + (nbCorrect * 100.0 / (nbCorrect + nbIncorrect)) + "%)");
+
+		}
+
+	}
+
+	private static void testFull() throws Exception {
 		// setup the DataSetSpecification
 		DataSetSpecification dss = getSpecification();
 
@@ -68,7 +107,7 @@ public class Main {
 		DataSet testData = loadCompleteDataSet(dataSetName + ".test", dss);
 		DataSet trainingData = loadCompleteDataSet(dataSetName + ".train", dss);
 		// Hint: use loadDataSet(...) instead of loadCompleteDataSet(...) to load only some of the examples from a file
-		
+
 		// initialize the learner
 		DecisionTreeLearner dtl = new DecisionTreeLearner();
 
